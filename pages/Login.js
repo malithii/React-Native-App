@@ -15,6 +15,31 @@ const image = {
 };
 
 export default function Login() {
+  const [username, setUsername] = React.useState('');
+  const [password, setPassword] = React.useState('');
+
+  async function login() {
+    //to connect to localhost add "android:usesCleartextTraffic="true" in the androidmanifest.xml file, add the ip address in the url and remove s in https
+    console.log('hello');
+    try {
+      const response = await fetch('http://192.168.1.3:5000/user/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username: username,
+          password: password,
+        }),
+      });
+      const data = await response.json();
+      console.log('success');
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <View
       style={{
@@ -58,6 +83,8 @@ export default function Login() {
               style={styles.input}
               placeholder="Enter your username"
               autoFocus
+              value={username}
+              onChangeText={text => setUsername(text)}
             />
             <Text style={styles.inputHeading}>Password</Text>
 
@@ -67,10 +94,12 @@ export default function Login() {
               autoFocus
               secureTextEntry={true}
               marginBottom={10}
+              value={password}
+              onChangeText={text => setPassword(text)}
             />
             <Text style={styles.text}>Forgot password?</Text>
             <View style={{marginBottom: 10}}>
-              <Button title="Login" color="#e74c3c" />
+              <Button title="Login" color="#e74c3c" onPress={login} />
             </View>
             <TouchableOpacity
               style={{
